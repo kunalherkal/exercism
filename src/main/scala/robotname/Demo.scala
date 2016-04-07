@@ -9,7 +9,8 @@ object Demo extends App {
 
   val robot2 = robot1.boot
   println(robot2.name)
-  val robot3 = robot1.reset
+
+  val robot3 = robot2.reset
   println(robot3.name)
 
 }

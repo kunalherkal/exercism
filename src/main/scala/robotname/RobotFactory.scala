@@ -5,7 +5,7 @@ package robotname
   */
 class RobotFactory {
 
-  def getRobot : Robot = {
+  def getRobot : PrimaryRobot = {
     new PrimaryRobot
   }
 }

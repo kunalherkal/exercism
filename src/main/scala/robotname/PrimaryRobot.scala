@@ -3,9 +3,7 @@ package robotname
 /**
   * Created by khn3193 on 4/6/16.
   */
-class PrimaryRobot extends Robot {
+class PrimaryRobot {
 
-  override def boot: CompleteRobot = CompleteRobot(new RobotName)
-
-  override def reset: CompleteRobot = CompleteRobot(new RobotName)
+  def boot: CompleteRobot = CompleteRobot(RobotNameDirectory.getName)
 }
