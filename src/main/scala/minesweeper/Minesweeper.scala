@@ -40,16 +40,16 @@ object Minesweeper {
     val previousRowIndex = currentRowIndex - 1
     val nextRowIndex = currentRowIndex + 1
 
-    val currentRowPreviousElement = if(previousElementIndex >= 0) arr(currentRowIndex)._1(previousElementIndex)._1 else emptySpace
-    val currentRowNextElement = if(nextElementIndex < columns) arr(currentRowIndex)._1(nextElementIndex)._1 else emptySpace
+    val currentRowPreviousElement = element(arr, currentRowIndex, previousElementIndex, previousElementIndex >= 0)
+    val currentRowNextElement = element(arr, currentRowIndex, nextElementIndex, nextElementIndex < columns)
 
-    val previousRowPreviousElement = if(previousRowIndex >= 0 && previousElementIndex >= 0 ) arr(previousRowIndex)._1(previousElementIndex)._1 else emptySpace
-    val previousRowCurrentElement = if(previousRowIndex >= 0) arr(previousRowIndex)._1(currentElementIndex)._1 else emptySpace
-    val previousRowNextElement = if(previousRowIndex >= 0 && nextElementIndex < columns ) arr(previousRowIndex)._1(nextElementIndex)._1 else emptySpace
+    val previousRowPreviousElement = element(arr, previousRowIndex, previousElementIndex, previousRowIndex >= 0 && previousElementIndex >= 0)
+    val previousRowCurrentElement = element(arr, previousRowIndex, currentElementIndex, previousRowIndex >= 0)
+    val previousRowNextElement = element(arr, previousRowIndex, nextElementIndex, previousRowIndex >= 0 && nextElementIndex < columns)
 
-    val nextRowPreviousElement = if(nextRowIndex < rows && previousElementIndex >= 0 ) arr(nextRowIndex)._1(previousElementIndex)._1 else emptySpace
-    val nextRowCurrentElement = if(nextRowIndex < rows) arr(nextRowIndex)._1(currentElementIndex)._1 else emptySpace
-    val nextRowNextElement = if(nextRowIndex < rows && nextElementIndex < columns ) arr(nextRowIndex)._1(nextElementIndex)._1 else emptySpace
+    val nextRowPreviousElement = element(arr, nextRowIndex, previousElementIndex, nextRowIndex < rows && previousElementIndex >= 0)
+    val nextRowCurrentElement = element(arr, nextRowIndex, currentElementIndex, nextRowIndex < rows)
+    val nextRowNextElement = element(arr, nextRowIndex, nextElementIndex, nextRowIndex < rows && nextElementIndex < columns)
 
     List(currentRowNextElement, currentRowPreviousElement, previousRowCurrentElement, previousRowPreviousElement,
       previousRowNextElement, nextRowCurrentElement, nextRowNextElement, nextRowPreviousElement)
