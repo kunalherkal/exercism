@@ -5,17 +5,18 @@ package minesweeper
   */
 object Minesweeper {
   val emptySpace = ' '
+  val bomb = '*'
 
-  def annotate(list: List[String]) = {
+  def annotate(list: List[String]): List[String] = {
     if(!validate(list))
-      throw new IllegalArgumentException
+      return Nil
 
     val arrFormatWithIndices = convert(list)
 
     arrFormatWithIndices.map(row => {
       row._1.map(element => {
         element._1 match {
-          case '*' => '*'
+          case '*' => bomb
           case _ => {
             val l = adjacentElements(arrFormatWithIndices, row._2, element._2)
             val count = matchCount(l)
@@ -26,7 +27,7 @@ object Minesweeper {
           }
         }
       })
-    }.mkString)
+    }.mkString).toList
   }
 
   def adjacentElements(arr: Array[(Array[(Char, Int)], Int)], currentRowIndex: Int, currentElementIndex: Int) : List[Char] = {
@@ -68,7 +69,7 @@ object Minesweeper {
   }
 
   def matchCount(a: List[Char]): Int = {
-    a.map(s => if (s == '*') 1 else 0).sum
+    a.map(s => if (s == bomb) 1 else 0).sum
   }
 
 
@@ -77,5 +78,11 @@ object Minesweeper {
 
 object Demo extends App {
   Minesweeper.annotate(List("  *  ", "* * *", "     "))
+  Minesweeper.annotate(List(
+    "  *  ",
+    "  *  ",
+    "*****",
+    "  *  ",
+    "  *  ")).foreach(println)
 
 }
