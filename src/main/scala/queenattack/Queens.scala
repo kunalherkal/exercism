@@ -5,16 +5,21 @@ package queenattack
   */
 case class Queens() {
 
-  def boardString(w: Option[Position], b: Option[Position]): String = (w, b) match {
-    case(None, None) => (1 to 8).map(row => (1 to 8).map(column => "_ ").mkString.trim + "\n").mkString
-    case _ => (0 to 7).map(row => (0 to 7).map(column =>  {
-      if(row == w.get.rowIndex && column == w.get.columnIndex)
-        "W "
-      else if (row == b.get.rowIndex && column == b.get.columnIndex)
-        "B "
-      else
-        "_ "
-    } ).mkString.trim + "\n").mkString
+  def boardString(whiteQueen: Option[Position], blackQueen: Option[Position]): String = (whiteQueen, blackQueen) match {
+
+    case (Some(Position(_, _)), Some(Position(_, _))) => {
+      val wRow = whiteQueen.get.rowIndex
+      val wColumn = whiteQueen.get.columnIndex
+      val bRow = blackQueen.get.rowIndex
+      val bColumn = blackQueen.get.columnIndex
+
+      (0 to 7).map(row => (0 to 7).map(column => (row, column) match {
+        case (`wRow`, `wColumn`) => "W "
+        case (`bRow`, `bColumn`) => "B "
+        case _ => "_ "
+      }).mkString.trim + "\n").mkString
+    }
+    case _ => (0 to 7).map(row => (0 to 7).map(column => "_ ").mkString.trim + "\n").mkString
   }
 
   def canAttack(w: Position, b: Position): Boolean = {
