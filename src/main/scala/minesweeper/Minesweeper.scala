@@ -31,34 +31,36 @@ object Minesweeper {
     }.mkString).toList
   }
 
-  def adjacentElements(arr: Array[Array[Element]], currentRowIndex: Int, currentElementIndex: Int) : List[Char] = {
+  def adjacentElements(arr: Array[Array[Element]], currentRowIndex: Int, currentColumnIndex: Int) : List[Char] = {
 
-    val rows = arr.length
-    val columns = arr(0).length
-
-    val previousElementIndex = currentElementIndex - 1
-    val nextElementIndex = currentElementIndex + 1
+    val previousColumnIndex = currentColumnIndex - 1
+    val nextColumnIndex = currentColumnIndex + 1
 
     val previousRowIndex = currentRowIndex - 1
     val nextRowIndex = currentRowIndex + 1
 
-    val currentRowPreviousElement = element(arr, currentRowIndex, previousElementIndex, previousElementIndex >= 0)
-    val currentRowNextElement = element(arr, currentRowIndex, nextElementIndex, nextElementIndex < columns)
+    val currentRowPreviousElement = element(arr, currentRowIndex, previousColumnIndex)
+    val currentRowNextElement = element(arr, currentRowIndex, nextColumnIndex)
 
-    val previousRowPreviousElement = element(arr, previousRowIndex, previousElementIndex, previousRowIndex >= 0 && previousElementIndex >= 0)
-    val previousRowCurrentElement = element(arr, previousRowIndex, currentElementIndex, previousRowIndex >= 0)
-    val previousRowNextElement = element(arr, previousRowIndex, nextElementIndex, previousRowIndex >= 0 && nextElementIndex < columns)
+    val previousRowPreviousElement = element(arr, previousRowIndex, previousColumnIndex)
+    val previousRowCurrentElement = element(arr, previousRowIndex, currentColumnIndex)
+    val previousRowNextElement = element(arr, previousRowIndex, nextColumnIndex)
 
-    val nextRowPreviousElement = element(arr, nextRowIndex, previousElementIndex, nextRowIndex < rows && previousElementIndex >= 0)
-    val nextRowCurrentElement = element(arr, nextRowIndex, currentElementIndex, nextRowIndex < rows)
-    val nextRowNextElement = element(arr, nextRowIndex, nextElementIndex, nextRowIndex < rows && nextElementIndex < columns)
+    val nextRowPreviousElement = element(arr, nextRowIndex, previousColumnIndex)
+    val nextRowCurrentElement = element(arr, nextRowIndex, currentColumnIndex)
+    val nextRowNextElement = element(arr, nextRowIndex, nextColumnIndex)
 
     List(currentRowNextElement, currentRowPreviousElement, previousRowCurrentElement, previousRowPreviousElement,
       previousRowNextElement, nextRowCurrentElement, nextRowNextElement, nextRowPreviousElement)
   }
 
-  def element(arr: Array[Array[Element]], rowIndex: Int, elementIndex: Int, f: => Boolean): Char = {
-    if(f) arr(rowIndex)(elementIndex).value else emptySpace
+  def element(arr: Array[Array[Element]], rowIndex: Int, columnIndex: Int): Char = {
+    val rows = arr.length
+    val columns = arr(0).length
+
+    val validElement = (rowIndex >= 0 && rowIndex < rows) && (columnIndex >= 0 && columnIndex < columns)
+
+    if(validElement) arr(rowIndex)(columnIndex).value else emptySpace
   }
 
   def validate(list: List[String]) = {
