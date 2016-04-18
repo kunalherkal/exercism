@@ -12,7 +12,7 @@ object Minesweeper {
     if(!validate(list))
       return Nil
 
-    val array2D = convertInto2DArray(list)
+    val array2D: Array[Array[Element]] = convertTo2DArray(list)
 
     array2D.map(row => {
       row.map({element =>
@@ -65,8 +65,8 @@ object Minesweeper {
     list.forall(s => list.head.length == s.length)
   }
 
-  def convertInto2DArray(list: List[String]): Array[Array[Element]] = {
-    val a = list.map(s => s.toArray.zipWithIndex).zipWithIndex.toArray
+  def convertTo2DArray(list: List[String]): Array[Array[Element]] = {
+    val a: Array[(Array[(Char, Int)], Int)] = list.map(s => s.toArray.zipWithIndex).zipWithIndex.toArray
 
     a.map(row => {
       row._1.map(element => {
@@ -84,7 +84,6 @@ object Minesweeper {
 
 
 object Demo extends App {
-  //Minesweeper.annotate(List("  *  ", "* * *", "     "))
   Minesweeper.annotate(List(
     "  *  ",
     "  *  ",
