@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, FunSuite}
 class QueensTest extends FunSuite with Matchers {
   test ("empty boardString") {
     Queens().boardString(None, None) should equal(
-      "_ _ _ _ _ _ _ _\n" +
+        "_ _ _ _ _ _ _ _\n" +
         "_ _ _ _ _ _ _ _\n" +
         "_ _ _ _ _ _ _ _\n" +
         "_ _ _ _ _ _ _ _\n" +
@@ -20,7 +20,7 @@ class QueensTest extends FunSuite with Matchers {
 
   test("boardString") {
     Queens().boardString(Some(Position(2, 4)), Some(Position(6, 6))) should equal(
-      "_ _ _ _ _ _ _ _\n" +
+        "_ _ _ _ _ _ _ _\n" +
         "_ _ _ _ _ _ _ _\n" +
         "_ _ _ _ W _ _ _\n" +
         "_ _ _ _ _ _ _ _\n" +

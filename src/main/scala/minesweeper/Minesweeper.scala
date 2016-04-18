@@ -7,18 +7,19 @@ object Minesweeper {
   val emptySpace = ' '
   val bomb = '*'
 
+
   def annotate(list: List[String]): List[String] = {
     if(!validate(list))
       return Nil
 
-    val arrFormatWithIndices = convert(list)
+    val array2D = convertInto2DArray(list)
 
-    arrFormatWithIndices.map(row => {
-      row._1.map(element => {
-        element._1 match {
+    array2D.map(row => {
+      row.map({element =>
+        element.value match {
           case '*' => bomb
           case _ => {
-            val l = adjacentElements(arrFormatWithIndices, row._2, element._2)
+            val l = adjacentElements(array2D, element.rowIndex, element.columnIndex)
             val count = matchCount(l)
             count match {
               case 0 => emptySpace
@@ -30,10 +31,10 @@ object Minesweeper {
     }.mkString).toList
   }
 
-  def adjacentElements(arr: Array[(Array[(Char, Int)], Int)], currentRowIndex: Int, currentElementIndex: Int) : List[Char] = {
+  def adjacentElements(arr: Array[Array[Element]], currentRowIndex: Int, currentElementIndex: Int) : List[Char] = {
 
     val rows = arr.length
-    val columns = arr(0)._1.length
+    val columns = arr(0).length
 
     val previousElementIndex = currentElementIndex - 1
     val nextElementIndex = currentElementIndex + 1
@@ -56,16 +57,22 @@ object Minesweeper {
       previousRowNextElement, nextRowCurrentElement, nextRowNextElement, nextRowPreviousElement)
   }
 
-  def element(arr: Array[(Array[(Char, Int)], Int)], rowIndex: Int, elementIndex: Int, f: => Boolean): Char = {
-    if(f) arr(rowIndex)._1(elementIndex)._1 else emptySpace
+  def element(arr: Array[Array[Element]], rowIndex: Int, elementIndex: Int, f: => Boolean): Char = {
+    if(f) arr(rowIndex)(elementIndex).value else emptySpace
   }
 
   def validate(list: List[String]) = {
     list.forall(s => list.head.length == s.length)
   }
 
-  def convert(list: List[String]) = {
-    list.map(s => s.toArray.zipWithIndex).zipWithIndex.toArray
+  def convertInto2DArray(list: List[String]): Array[Array[Element]] = {
+    val a = list.map(s => s.toArray.zipWithIndex).zipWithIndex.toArray
+
+    a.map(row => {
+      row._1.map(element => {
+        Element(element._1, row._2, element._2)
+      })
+    })
   }
 
   def matchCount(a: List[Char]): Int = {
@@ -77,7 +84,7 @@ object Minesweeper {
 
 
 object Demo extends App {
-  Minesweeper.annotate(List("  *  ", "* * *", "     "))
+  //Minesweeper.annotate(List("  *  ", "* * *", "     "))
   Minesweeper.annotate(List(
     "  *  ",
     "  *  ",

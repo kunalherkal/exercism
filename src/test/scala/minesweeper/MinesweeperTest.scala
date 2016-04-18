@@ -58,12 +58,14 @@ class MinesweeperTest extends FlatSpec with Matchers {
   }
 
   it should "handle cross" in {
-    Minesweeper.annotate(List("  *  ",
+    Minesweeper.annotate(List(
+      "  *  ",
       "  *  ",
       "*****",
       "  *  ",
       "  *  ")) should
-      equal(List(" 2*2 ",
+      equal(List("" +
+        " 2*2 ",
         "25*52",
         "*****",
         "25*52",

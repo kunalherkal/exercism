@@ -5,24 +5,40 @@ package queenattack
   */
 case class Queens() {
 
-  def boardString(whiteQueen: Option[Position], blackQueen: Option[Position]): String = (whiteQueen, blackQueen) match {
+  def boardString(whiteQueen: Option[Position], blackQueen: Option[Position]): String = {
+    val dummyQueen = Position(99, 99)
+    val whiteQ = whiteQueen.getOrElse(dummyQueen)
+    val blackQ = blackQueen.getOrElse(dummyQueen)
 
-    case (Some(Position(_, _)), Some(Position(_, _))) => {
-      val wRow = whiteQueen.get.rowIndex
-      val wColumn = whiteQueen.get.columnIndex
-      val bRow = blackQueen.get.rowIndex
-      val bColumn = blackQueen.get.columnIndex
+    val wRow = whiteQ.rowIndex
+    val wColumn =  whiteQ.columnIndex
+    val bRow = blackQ.rowIndex
+    val bColumn =  blackQ.columnIndex
 
-      (0 to 7).map(row => (0 to 7).map(column => (row, column) match {
-        case (`wRow`, `wColumn`) => "W "
-        case (`bRow`, `bColumn`) => "B "
-        case _ => "_ "
-      }).mkString.trim + "\n").mkString
-    }
-    case _ => (0 to 7).map(row => (0 to 7).map(column => "_ ").mkString.trim + "\n").mkString
+    (0 to 7).map(row => (0 to 7).map(column => (row, column) match {
+      case (`wRow`, `wColumn`) => "W "
+      case (`bRow`, `bColumn`) => "B "
+      case _ => "_ "
+    }).mkString.trim + "\n").mkString
+
   }
 
-  def canAttack(w: Position, b: Position): Boolean = {
-    false
+  def canAttack(whiteQueen: Position, blackQueen: Position): Boolean = {
+    horizontalAttack(whiteQueen, blackQueen) || verticalAttack(whiteQueen, blackQueen) || diagonalAttack(whiteQueen, blackQueen)
+  }
+
+  def horizontalAttack(whiteQueen: Position, blackQueen: Position): Boolean = {
+    whiteQueen.rowIndex == blackQueen.rowIndex
+  }
+
+  def verticalAttack(whiteQueen: Position, blackQueen: Position): Boolean = {
+    whiteQueen.columnIndex == blackQueen.columnIndex
+  }
+
+  def diagonalAttack(whiteQueen: Position, blackQueen: Position): Boolean = {
+    val rowDist = whiteQueen.rowIndex - blackQueen.rowIndex
+    val colDist = whiteQueen.columnIndex - blackQueen.columnIndex
+
+    Math.abs(rowDist) == Math.abs(colDist)
   }
 }
