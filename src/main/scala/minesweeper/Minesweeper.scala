@@ -1,66 +1,59 @@
 package minesweeper
 
+import scala.util.Random
+
 /**
   * Created by khn3193 on 4/13/16.
   */
 object Minesweeper {
   val emptySpace = ' '
-  val bomb = '*'
+  val mine = '*'
+  val random = new Random
 
+  def generate() : Array[String] = {
+    val arr = new Array[String](81)
+    val mineLocations = (0 to 9).map(a => random.nextInt(81)).toList
+    mineLocations.foreach(l => arr(l) = "*")
+    (0 to 81).foreach(a => {
+      if(a % 8 == 0) arr(a) = "\n"
+    })
+    arr
+  }
 
   def annotate(list: List[String]): List[String] = {
     if(!validate(list))
-      return Nil
+      throw new IllegalArgumentException("Invalid list")
 
     val array2D: Array[Array[Element]] = convertTo2DArray(list)
 
     array2D.map(row => {
       row.map({element =>
         element.value match {
-          case '*' => bomb
-          case _ => {
-            val l = adjacentElements(array2D, element.rowIndex, element.columnIndex)
-            val count = matchCount(l)
+          case `mine` => mine
+          case _ =>
+            val count = adjacentMines(array2D, element)
             count match {
               case 0 => emptySpace
               case _ => count.toString.charAt(0)
             }
-          }
         }
       })
     }.mkString).toList
   }
 
-  def adjacentElements(arr: Array[Array[Element]], currentRowIndex: Int, currentColumnIndex: Int) : List[Char] = {
-
-    val previousColumnIndex = currentColumnIndex - 1
-    val nextColumnIndex = currentColumnIndex + 1
-
-    val previousRowIndex = currentRowIndex - 1
-    val nextRowIndex = currentRowIndex + 1
-
-    val currentRowPreviousElement = element(arr, currentRowIndex, previousColumnIndex)
-    val currentRowNextElement = element(arr, currentRowIndex, nextColumnIndex)
-
-    val previousRowPreviousElement = element(arr, previousRowIndex, previousColumnIndex)
-    val previousRowCurrentElement = element(arr, previousRowIndex, currentColumnIndex)
-    val previousRowNextElement = element(arr, previousRowIndex, nextColumnIndex)
-
-    val nextRowPreviousElement = element(arr, nextRowIndex, previousColumnIndex)
-    val nextRowCurrentElement = element(arr, nextRowIndex, currentColumnIndex)
-    val nextRowNextElement = element(arr, nextRowIndex, nextColumnIndex)
-
-    List(currentRowNextElement, currentRowPreviousElement, previousRowCurrentElement, previousRowPreviousElement,
-      previousRowNextElement, nextRowCurrentElement, nextRowNextElement, nextRowPreviousElement)
-  }
-
-  def element(arr: Array[Array[Element]], rowIndex: Int, columnIndex: Int): Char = {
+  def adjacentGrid(arr: Array[Array[Element]], currentRowIndex: Int, currentColumnIndex: Int, level: Int) : List[Char] = {
     val rows = arr.length
     val columns = arr(0).length
 
-    val validElement = (rowIndex >= 0 && rowIndex < rows) && (columnIndex >= 0 && columnIndex < columns)
+    val startRowIndex = currentRowIndex - level
+    val endRowIndex = currentRowIndex + level
+    val startColumnIndex = currentColumnIndex - level
+    val endColumnIndex = currentColumnIndex + level
 
-    if(validElement) arr(rowIndex)(columnIndex).value else emptySpace
+    (startRowIndex to endRowIndex).flatMap(row => (startColumnIndex to endColumnIndex).map(column => {
+      val validElement = (row >= 0 && row < rows) && (column >= 0 && column < columns)
+      if(validElement) arr(row)(column).value else emptySpace
+    })).toList
   }
 
   def validate(list: List[String]) = {
@@ -77,11 +70,14 @@ object Minesweeper {
     })
   }
 
-  def matchCount(a: List[Char]): Int = {
-    a.map(s => if (s == bomb) 1 else 0).sum
+  def adjacentMines(arr: Array[Array[Element]], element: Element): Int = {
+    val l = adjacentGrid(arr, element.rowIndex, element.columnIndex, 1)
+    l map isMine sum
   }
 
-
+  def isMine(s: Char): Int = {
+    if (s == mine) 1 else 0
+  }
 }
 
 
@@ -92,5 +88,4 @@ object Demo extends App {
     "*****",
     "  *  ",
     "  *  ")).foreach(println)
-
 }
